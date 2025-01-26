@@ -1,52 +1,33 @@
 import pyautogui
 import time
 import random
-import win32gui
-import win32con
+#import win32gui
+#import win32con
+import pygetwindow as gw # pip3 install pygetwindow
 
-def move_windows():
-    """Move random windows around."""
-    def callback(hwnd, extra):
-        if win32gui.IsWindowVisible(hwnd):
-            # Get the window title
-            title = win32gui.GetWindowText(hwnd)
-            if title:
-                # Move the window to a random position
-                x = random.randint(0, 800)
-                y = random.randint(0, 600)
-                win32gui.MoveWindow(hwnd, x, y, 400, 300, True)
+# windows = gw.getAllTitles()
+# for win in windows:
+#     # if str(win) != "Google Chrome": 
+#     #     continue
+geometry = gw.getWindowGeometry("Google Chrome")
+print(f'Window title: {"Google Chrome"}')
+print(f'> top-left X coordinate: {geometry[0]}')
+print(f'> top-left Y coordinate: {geometry[1]}')
+print(f'> width: {geometry[2]}')
+print(f'> height: {geometry[3]}\n')
 
-    win32gui.EnumWindows(callback, None)
 
-def random_mouse_movement():
-    """Move the mouse to random locations."""
-    screen_width, screen_height = pyautogui.size()
-    x = random.randint(0, screen_width)
-    y = random.randint(0, screen_height)
-    pyautogui.moveTo(x, y, duration=0.2)
+currentMouseX, currentMouseY = pyautogui.position()
+i = 0
+top_left_x = geometry[0]
+width = geometry[2]
+height = geometry[3]
+top_left_y = geometry[1]
 
-def annoying_message_box():
-    """Display random annoying message boxes."""
-    import ctypes
-    messages = [
-        "Something went wrong!",
-        "Oops! Try again!",
-        "Your system is haunted!",
-        "Random Error 404!"
-    ]
-    ctypes.windll.user32.MessageBoxW(0, random.choice(messages), "Annoying Message", 0)
-
-# Main function to run the chaos
-def create_chaos():
-    try:
-        while True:
-            move_windows()
-            random_mouse_movement()
-            if random.randint(0, 5) == 0:  # Occasionally show a message box
-                annoying_message_box()
-            time.sleep(0.5)  # Add a small delay
-    except KeyboardInterrupt:
-        print("Chaos stopped. You're welcome!")
-
-if __name__ == "__main__":
-    create_chaos()
+while i < 10:
+    print(i)
+    tmpX = top_left_x + random.randint(0, int(width))
+    tmpY = top_left_y + random.randint(0, int(height))
+    pyautogui.moveTo(tmpX, tmpY, duration=1)
+    time.sleep(1)
+    i += 1
